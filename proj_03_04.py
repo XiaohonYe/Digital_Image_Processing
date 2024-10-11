@@ -39,4 +39,4 @@ if __name__ == "__main__":
 
     plt.tight_layout()
     plt.show()
-    plt.savefig('proj_03_04.png', format='png')
+    plt.savefig('hw_01/proj_03_04.png', format='png')

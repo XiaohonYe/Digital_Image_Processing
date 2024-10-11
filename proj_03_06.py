@@ -53,7 +53,7 @@ def main(img_path, mode):
     # 调整布局以避免重叠
     plt.tight_layout()
     plt.show()
-    plt.savefig(f'proj_03_06_{mode}.png', format='png')
+    plt.savefig(f'hw_01/proj_03_06_{mode}.png', format='png')
 
 if __name__ == "__main__":
     img_path = './data/images_chapter_03/Fig3.43(a).jpg'

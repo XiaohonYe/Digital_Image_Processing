@@ -56,7 +56,7 @@ def display_results(original_image, equalized_image):
     plt.ylim([0, 15000])
     # plt.show()
 
-    plt.savefig('proj_03_02.png', format='png')
+    plt.savefig('hw_01/proj_03_02.png', format='png')
 
 if __name__ == "__main__":
     image_path = './data/images_chapter_03/Fig3.08(a).jpg'

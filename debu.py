@@ -45,4 +45,4 @@ plt.axis('off')
 # 展示结果
 plt.tight_layout()
 plt.show()
-plt.savefig('debug_0305.png')
+plt.savefig('hw_01/debug_0305.png')

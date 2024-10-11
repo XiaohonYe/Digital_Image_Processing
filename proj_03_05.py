@@ -59,4 +59,4 @@ if __name__ == "__main__":
     fig.delaxes(axs[0, 1])  # 移除第一行第二个子图位置
     plt.tight_layout()
     plt.show()
-    plt.savefig('proj_03_05.png', format='png')
+    plt.savefig('hw_01/proj_03_05.png', format='png')
