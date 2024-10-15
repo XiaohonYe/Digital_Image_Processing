@@ -21,13 +21,10 @@ def laplacian_filteringv2(img):
     return img2
 
 if __name__ == "__main__":
-    # 加载原始图像
     img = load_image('./data/images_chapter_03/Fig3.40(a).jpg')
 
-    # 创建绘图窗口
     fig, axs = plt.subplots(3, 2, figsize=(12, 12))
 
-    # 显示原始图像
     axs[0, 0].imshow(img, cmap='gray')
     axs[0, 0].set_title('Original')
     axs[0, 0].axis('off')
@@ -55,8 +52,8 @@ if __name__ == "__main__":
     axs[2, 1].set_title('Output 2 (Original + Custom Laplacian Mask)')
     axs[2, 1].axis('off')
 
-    # 移除空白子图
-    fig.delaxes(axs[0, 1])  # 移除第一行第二个子图位置
+    # remove blank subplot
+    fig.delaxes(axs[0, 1])  
     plt.tight_layout()
     plt.show()
     plt.savefig('hw_01/proj_03_05.png', format='png')

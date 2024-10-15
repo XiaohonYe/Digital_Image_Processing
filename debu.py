@@ -1,48 +1,50 @@
-import cv2
+from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
+import cv2
 
-# 读取图像并转换为双精度浮点格式
-I = cv2.imread('./data/images_chapter_03/Fig3.40(a).jpg', cv2.IMREAD_GRAYSCALE)
-I = I.astype(np.float64) / 255.0  # 转换为[0,1]范围的双精度图像
+def load_image(path):
+    image = Image.open(path).convert('L')  # Convert to grayscale
+    return np.array(image)
 
-# 初始化结果图像
-J = np.zeros_like(I)
+def create_laplacian_filterv1(alpha):
+    return np.array([[0, -1, 0], [-1, 4 + alpha, -1], [0, -1, 0]])
 
-# 获取图像的尺寸
-M, N = I.shape
+def create_laplacian_filterv2(alpha):
+    return np.array([[-1, -1, -1], [-1, 8 + alpha, -1], [-1, -1, -1]])
 
-# 滤波操作
-for x in range(1, M-1):
-    for y in range(1, N-1):
-        J[x, y] = 9 * I[x, y]
-        for dx in range(-1, 2):
-            for dy in range(-1, 2):
-                J[x, y] -= I[x + dx, y + dy]
+def high_boost_filter(image, A):
+    kernel = np.ones((3, 3), np.float32) / 9.0
+    blurred_image = cv2.filter2D(image, -1, kernel)
+    enhanced_image = (1 + A) * image - A * blurred_image
+    enhanced_image = np.clip(enhanced_image, 0, 255).astype(np.uint8)
+    
+    return enhanced_image, blurred_image
 
-# 显示图像
-plt.figure(figsize=(12, 4))
+def main(img_path, mode):
+    img = load_image(img_path)
 
-# 原始图像
-plt.subplot(1, 3, 1)
-plt.imshow((I * 255).astype(np.uint8), cmap='gray')
-plt.title('Original Image')
-plt.axis('off')
+    fig, axs = plt.subplots(2, 4, figsize=(10, 8))
 
-# 滤波后图像
-plt.subplot(1, 3, 2)
-plt.imshow((J * 255).astype(np.uint8), cmap='gray')
-plt.title('Filtered Image')
-plt.axis('off')
+    axs[0, 0].imshow(img, cmap='gray')
+    axs[0, 0].set_title('Original')
+    axs[0, 0].axis('off')
 
-# 原图与滤波后图像相加
-output = I + J
-plt.subplot(1, 3, 3)
-plt.imshow((output * 255).astype(np.uint8), cmap='gray')
-plt.title('Original + Filtered')
-plt.axis('off')
+    cnt = 0
 
-# 展示结果
-plt.tight_layout()
-plt.show()
-plt.savefig('hw_01/debug_0305.png')
+    for alpha in [0.6, 1, 1.7, 2.3, 2.9, 5]:
+        
+        enhanced_img, blurred_img = high_boost_filter(img, alpha)
+
+        cnt += 1
+        axs[cnt // 4, cnt % 4].imshow(enhanced_img, cmap='gray')
+        axs[cnt // 4, cnt % 4].set_title(f'α = {alpha}')
+        axs[cnt // 4, cnt % 4].axis('off')
+        
+    plt.tight_layout()
+    plt.show()
+    plt.savefig(f'hw_01/proj_03_06_{mode}.png', format='png')
+
+if __name__ == "__main__":
+    img_path = './data/images_chapter_03/Fig3.43(a).jpg'
+    main(img_path, 'v2')

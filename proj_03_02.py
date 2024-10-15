@@ -2,6 +2,10 @@ from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
 from skimage import exposure
+import matplotlib
+
+matplotlib.rcParams['font.sans-serif'] = ['SimHei'] 
+matplotlib.rcParams['axes.unicode_minus'] = False
 
 def load_image(image_path):
     image = Image.open(image_path).convert('L')
@@ -20,16 +24,12 @@ def histogram_equalization(image_array):
     
     # Convert back to unsigned 8-bit integer format
     equalized_image_array = np.round(equalized_image_array).astype(np.uint8)
-    # equalized_image_array = exposure.equalize_hist(image_array) * 255
+    # equalized_image_array = exposure.equalize_hist(image_array) * 255 # anther way to histogram_equalization
 
     return equalized_image_array, cdf_normalized
 
 
 def display_results(original_image, equalized_image):
-    # Compute histograms
-    # original_hist, _ = np.histogram(original_image.flatten(), 256, [0, 256])
-    # equalized_hist, _ = np.histogram(equalized_image.flatten(), 256, [0, 256])
-    
     # Display original and equalized images
     plt.figure(figsize=(15, 10))
     plt.subplot(2, 2, 1)
@@ -40,8 +40,6 @@ def display_results(original_image, equalized_image):
     plt.title("Equalized Image")
     plt.imshow(equalized_image, cmap='gray')
     
-    # Display histograms
-    # plt.figure(figsize=(10, 5))
     plt.subplot(2, 2, 2)
     plt.title("Original Histogram")
     plt.hist(original_image.flatten(), bins=256, edgecolor = 'w')
@@ -50,11 +48,9 @@ def display_results(original_image, equalized_image):
     
     plt.subplot(2, 2, 4)
     plt.title("Equalized Histogram")
-    # plt.plot(equalized_hist)
     plt.hist(equalized_image.flatten(), bins=256, edgecolor='w')
     plt.xlim([0, 256])
     plt.ylim([0, 15000])
-    # plt.show()
 
     plt.savefig('hw_01/proj_03_02.png', format='png')
 
@@ -63,4 +59,10 @@ if __name__ == "__main__":
     image = load_image(image_path)
     image_array = np.array(image)
     equalized_image_array, cdf_normalized = histogram_equalization(image_array)
+    plt.figure()
+    plt.plot(cdf_normalized)
+    plt.title('直方图均衡化变换函数')
+    plt.xlabel('原始像素值')
+    plt.ylabel('均衡化后的像素值')
+    plt.savefig('hw_01/proj_03_02_1.png', format='png')
     display_results(image_array, equalized_image_array)

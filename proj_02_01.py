@@ -1,6 +1,10 @@
 from PIL import Image
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
+
+matplotlib.rcParams['font.sans-serif'] = ['SimHei'] 
+matplotlib.rcParams['axes.unicode_minus'] = False
 
 # Define dot patterns for levels 0 to 9
 def halftone_pattern():
@@ -73,13 +77,16 @@ if __name__ == "__main__":
     input_image_paths = ['./data/images_chapter_02/Fig2.22(a).jpg', 
                          './data/images_chapter_02/Fig2.22(b).jpg',
                          './data/images_chapter_02/Fig2.22(c).jpg']
+    output_image_names = [
+        ('Figs.2.22(a)处理前', 'Figs.2.22(a)处理后'),
+        ('Figs.2.22(b)处理前', 'Figs.2.22(b)处理后'),
+        ('Figs.2.22(c)处理前', 'Figs.2.22(c)处理后')
+    ]
     printed_images = []
     for iip in input_image_paths:
         input_image = Image.open(iip)
-        # print(np.array(input_image).shape)
         halftoned_image = main(input_image)
         printed_images.append((input_image, halftoned_image))
-    # print(np.array(halftoned_image).shape)
 
     # (b) Generate and save the test pattern
     test_pattern = create_test_pattern(256)
@@ -89,11 +96,11 @@ if __name__ == "__main__":
     for col in range(3):
         image_pair = printed_images[col]
         axs[0, col].imshow(image_pair[0], cmap='gray')
-        axs[0, col].set_title('Original')
+        axs[0, col].set_title(output_image_names[col][0])
         axs[0, col].axis('off')
 
         axs[1, col].imshow(image_pair[1], cmap='gray')
-        axs[1, col].set_title('Halftoned Image')
+        axs[1, col].set_title(output_image_names[col][1])
         axs[1, col].axis('off')
 
     
@@ -105,8 +112,6 @@ if __name__ == "__main__":
     axs[1, 3].set_title('Halftoned Test Pattern Image')
     axs[1, 3].axis('off')
 
-    # remove blank subplot
-    # fig.delaxes(axs[0, 1])  # 移除第一行第二个子图位置
     plt.tight_layout()
     plt.show()
     plt.savefig('hw_01/proj_02_01.png', format='png')
